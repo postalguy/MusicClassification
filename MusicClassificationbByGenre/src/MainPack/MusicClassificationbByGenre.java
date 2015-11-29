@@ -2,6 +2,7 @@
 
 package MainPack;
 
+import Utilities.ArrayTools;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
@@ -28,8 +29,8 @@ public class MusicClassificationbByGenre {
         int inputsCount = 8;
         int outputsCount = 4;
 
-        System.out.println("Running Sample");
-        System.out.println("Using training set " + trainingSetFileName);
+        System.out.println("Lancement :");
+        System.out.println("Set d'apprentissage =" + trainingSetFileName);
 
         // create training set
         DataSet trainingSet = null;
@@ -43,26 +44,27 @@ public class MusicClassificationbByGenre {
 
 
         // create multi layer perceptron
-        System.out.println("Creating neural network");
+        System.out.println("Création du réseau de neurones: \n\tEntrées : 8\n\tCouches cachées : 20\n\tSorties : 4");
         //8 iputs 
         //20 Hidden layers 
         //4 outputs 
         MultiLayerPerceptron neuralNet = new MultiLayerPerceptron(TransferFunctionType.SIGMOID, 8, 20, 4);
 
         // set learning parameters
-       double learningRate = 0.3;  // learning rate at minimum error 0.5
-       double momentum= 0.4;// momentum at minimum error 0.8
+       double learningRate = 0.5;  // learning rate at minimum error 0.5
+       double momentum= 0.8;// momentum at minimum error 0.8
         MomentumBackpropagation learningRule = (MomentumBackpropagation) neuralNet.getLearningRule();
         learningRule.setLearningRate(learningRate);
         learningRule.setMomentum(momentum);
 
         // learn the training set
-        System.out.println("Training neural network...");
+        System.out.println("------------------------------------------------------------");
+         System.out.println("Apprentissage du réseau avec un taux de "+learningRate +" et un élan "+ momentum);
         neuralNet.learn(trainingSet);
-        System.out.println("Done!");
+        System.out.println("Fait !");
 
         // test perceptron
-        System.out.println("Testing trained neural network");
+        System.out.println("Test avec le fichier d'entrée donne : ");
         testMusicClassification(neuralNet, trainingSet);
 
     }
@@ -71,11 +73,14 @@ public class MusicClassificationbByGenre {
 
         for (DataSetRow trainingElement : dset.getRows()) {
 
+          
             nnet.setInput(trainingElement.getInput());
             nnet.calculate();
             double[] networkOutput = nnet.getOutput();
-            System.out.print("Input: " + Arrays.toString(trainingElement.getInput()));
-            System.out.println(" Output: " + Arrays.toString(networkOutput));
+            System.out.println("Entrée: " + Arrays.toString(trainingElement.getInput()));
+            System.out.println("-> Sortie: " + Arrays.toString(networkOutput));
+            
+            System.out.println("--> le genre est = "+ArrayTools.getGenre(networkOutput));  
         }
 
     }
