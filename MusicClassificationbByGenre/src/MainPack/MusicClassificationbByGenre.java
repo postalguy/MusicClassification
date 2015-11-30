@@ -19,15 +19,17 @@ import org.neuroph.util.TransferFunctionType;
  * @author iamsmile
  */
 public class MusicClassificationbByGenre {
-
+  
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-
+        
+        Statistics stat = new Statistics(0,0, 0, 0);
         String trainingSetFileName = "Music.txt";
         int inputsCount = 8;
         int outputsCount = 4;
+        
 
         System.out.println("Lancement :");
         System.out.println("Set d'apprentissage =" + trainingSetFileName);
@@ -46,9 +48,12 @@ public class MusicClassificationbByGenre {
         // create multi layer perceptron
         System.out.println("Création du réseau de neurones: \n\tEntrées : 8\n\tCouches cachées : 20\n\tSorties : 4");
         //8 iputs 
+        int inp=8;
         //20 Hidden layers 
+        int HL=20;
         //4 outputs 
-        MultiLayerPerceptron neuralNet = new MultiLayerPerceptron(TransferFunctionType.SIGMOID, 8, 20, 4);
+        int outp=4;
+        MultiLayerPerceptron neuralNet = new MultiLayerPerceptron(TransferFunctionType.SIGMOID, inp, HL, outp);
 
         // set learning parameters
        double learningRate = 0.5;  // learning rate at minimum error 0.5
@@ -65,11 +70,12 @@ public class MusicClassificationbByGenre {
 
         // test perceptron
         System.out.println("Test avec le fichier d'entrée donne : ");
-        testMusicClassification(neuralNet, trainingSet);
-
+        testMusicClassification(neuralNet, trainingSet , stat);
+       System.out.println(stat.toString());
+        
     }
 
-    public static void testMusicClassification(NeuralNetwork nnet, DataSet dset) {
+    public static void testMusicClassification(NeuralNetwork nnet, DataSet dset , Statistics st) {
 
         for (DataSetRow trainingElement : dset.getRows()) {
 
@@ -79,8 +85,9 @@ public class MusicClassificationbByGenre {
             double[] networkOutput = nnet.getOutput();
             System.out.println("Entrée: " + Arrays.toString(trainingElement.getInput()));
             System.out.println("-> Sortie: " + Arrays.toString(networkOutput));
-            
-            System.out.println("--> le genre est = "+ArrayTools.getGenre(networkOutput));  
+           String out = ArrayTools.getGenre(networkOutput, st);
+            System.out.println("--> le genre est = "+out);  
+          
         }
 
     }

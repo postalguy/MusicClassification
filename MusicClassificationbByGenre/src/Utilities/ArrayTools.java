@@ -1,5 +1,7 @@
 package Utilities;
 
+import MainPack.Statistics;
+
 /**
  *
  * @author AKRIM ISMAIL
@@ -30,16 +32,16 @@ public class ArrayTools {
         return rank;
     }
     
-    public static String getGenre(double[] array){
+    public static String getGenre(double[] array,Statistics st){
     switch (getRank(array)){
-        case 0 : return "Rock";      
-        case 1 : return "Classique";
-        case 2 : return "Jazz";
-        case 3 : return "Folk";
+        case 0 : st.IncRock(); return "Rock";      
+        case 1 :  st.IncClassic(); return "Classique";
+        case 2 : st.IncJazz();return "Jazz";
+        case 3 : st.IncFolk();return "Folk";
         default : return "non identifié";
     }
     }
-    
+   
     /*public static int Mismatches(String[] st1, String[] st2){
         int mismatches=0;
         for (int i = 0; i < st1.length; i++) {
